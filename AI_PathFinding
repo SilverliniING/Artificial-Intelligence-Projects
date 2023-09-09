@@ -1,0 +1,99 @@
+from collections import deque
+class TreeNode:
+    def __init__(self, state, parent=None):
+        self.state = state
+        self.parent = parent
+
+def adjacency_matrix_to_list(adjacency_matrix):
+    adjacency_list = {}
+    num_nodes = len(adjacency_matrix)
+
+    for i in range(num_nodes):
+        neighbors = []
+        for j in range(num_nodes):
+            if adjacency_matrix[i][j] == 1:
+                neighbors.append(j)
+        adjacency_list[i] = neighbors
+    print("\n")
+    for node, neighbors in adjacency_list.items():
+     print(f"Node {node}: {neighbors}")
+    print("\n")
+
+
+def successor_function(adjacency_matrix, state):
+    successors = []
+    for i, connected in enumerate(adjacency_matrix[state]):
+        if connected:
+            successors.append(i)
+    return successors
+
+
+
+def bfs_find_path(adjacency_matrix, start_state, is_goal_state):
+    open_list = deque()
+    open_list2 = set()
+    closed_list = set()
+    closed_list2 = set()
+    
+    # Create the root of the tree
+    root = TreeNode(start_state)
+    open_list2.add(start_state)
+    open_list.append(root)
+    
+    while open_list:
+        current_node = open_list.popleft()
+        open_list2.pop()
+
+
+        if is_goal_state(current_node.state):
+            return construct_path(current_node)  # Goal state found, return the path
+        
+        closed_list.add(current_node.state)
+        closed_list2.add(current_node.state)
+
+
+        
+        successors = successor_function(adjacency_matrix, current_node.state)
+        
+        for successor_state in successors:
+            if successor_state not in closed_list:
+                successor_node = TreeNode(successor_state, current_node)
+                open_list.append(successor_node)
+                open_list2.add(successor_state)  # Enqueue unvisited successors
+        print(open_list2,current_node.state,closed_list2,is_goal_state(current_node),successors)
+
+    
+    return None  # Goal state not found
+
+def construct_path(node):
+    path = []
+    while node:
+        path.insert(0, node.state)
+        node = node.parent
+    return path
+
+# Example adjacency matrix (0-based indexing)
+adjacency_matrix = [
+    [0, 1, 0, 1, 0],
+    [1, 0, 1, 1, 0],
+    [0, 1, 0, 0, 1],
+    [1, 1, 0, 0, 1],
+    [0, 0, 1, 1, 0]
+]
+
+adjacency_matrix_to_list(adjacency_matrix)
+
+
+
+start_state = 0  # Starting node
+goal_state = 4  # Goal node
+
+def is_goal_state(state):
+    return state == goal_state
+
+final_path = bfs_find_path(adjacency_matrix, start_state, is_goal_state)
+
+if final_path is not None:
+    print(f"Final Path: {final_path}")
+else:
+    print("Goal state not found!")
