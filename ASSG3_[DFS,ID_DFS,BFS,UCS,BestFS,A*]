@@ -1,0 +1,23 @@
+def DEPTHFIRST_recur(GRAPH, NODE):
+#this is the closed list
+  alreadyvisited = set()
+ #we run helperfunction
+  if NODE not in alreadyvisited:
+            print(NODE)
+            alreadyvisited.add(NODE)
+            for ADJ in GRAPH[NODE]:
+                DEPTHFIRST_recur(G,ADJ)
+
+
+# Usage example:
+G = {
+    'A': ['B', 'C'],
+    'B': ['D'],
+    'C': ['E'],
+    'D': ['F'],
+    'E': ['F'],
+    'F': []
+}
+
+START = 'A'
+DEPTHFIRST_recur(G, START)
